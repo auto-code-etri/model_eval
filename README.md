@@ -7,3 +7,8 @@ LeetCode 코딩 문제들에 대해, 생성 모델들의 소스 생성 능력 �
     - 2.X버전은 # -*- coding: utf-8 -*- 구문 추가해야 함
   - pandas 설치
   - openai 설치
+
+- LeetCode CLi
+  - 참고: https://github.com/skygragon/leetcode-cli
+  - node.js 설치 필요
+  - cmd에서 leetcode user -c 명령어로 로그인후 사용
