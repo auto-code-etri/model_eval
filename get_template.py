@@ -8,14 +8,6 @@ def get_template(problem_number):
     result2 = subprocess.run(command2, stdout=subprocess.PIPE, shell=True, text=True)
     return result1.stdout, result2.stdout
 
-"""def extract_template(text):
-    start_index = text.find("@lc code=start")
-    end_index = text.find("@lc code=end", start_index)
-    
-    if start_index != -1 and end_index != -1:
-        return text[start_index + 14:end_index - 3].strip()
-    else:
-        return None"""
 def extract_template(text):
     start_index = text.find("@lc code=start")
     end_index = text.find("@lc code=end", start_index)
@@ -29,7 +21,6 @@ def extract_template(text):
         return extracted_template
     else:
         return None
-
 
 def update_python_dataset(dataset, problem_number, python_template):
     index_to_update = dataset[dataset['id'] == problem_number].index

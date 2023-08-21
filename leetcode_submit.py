@@ -83,7 +83,7 @@ def run_tests(results_name, entry):
     return try_results
 
 
-with open("41-50.json", encoding="utf-8-sig") as file:
+with open("python-results.json", encoding="utf-8-sig") as file:
     json_data = json.load(file)
 
 all_results = []
@@ -104,7 +104,7 @@ for entry in json_data:
     }
     all_results.append(result_obj)
 
-with open("41-50 submit-result.json", "w", encoding="utf-8") as result_file:
+with open("python submit-result.json", "w", encoding="utf-8") as result_file:
     json.dump(all_results, result_file, indent=2)
 
-print("All test results have been saved in submit_result.json.")
+print("All test results have been saved.")
