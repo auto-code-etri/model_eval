@@ -1,6 +1,7 @@
 import time
 import json
 import subprocess
+import re
 
 def test_save(filename):    
     result = subprocess.run("leetcode submit {}".format(filename), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)    
@@ -8,6 +9,48 @@ def test_save(filename):
 
 def clean_filename(title):
     return title.replace(" ", "-")
+
+def parse_message(message):
+    parsed_data = {}
+    
+    # Extracting "Accepted" or "Runtime Error" or "Wrong Answer"
+    match = re.search(r"([^\n]+)\n", message)
+    if match:
+        parsed_data["result"] = match.group(1).replace("\u00d7", "").strip()
+    
+    # Extracting numbers (987, 987)
+    numbers = re.findall(r"\d+", message)
+    if len(numbers) >= 2:
+        parsed_data["passed_test"] = int(numbers[0])
+        parsed_data["total_test"] = int(numbers[1])
+    
+    # Extracting runtime information (41 ms)
+    runtime_match = re.search(r"\(([\d\.]+ \w+)\)", message)
+    if runtime_match:
+        parsed_data["runtime"] = runtime_match.group(1)
+    
+    # Check if the status is "Accepted"
+    if "Accepted" in parsed_data.get("result", ""):
+        accepted_match = re.search(r"passed \(([\d\.]+ \w+)\)\n(.+)", message, re.DOTALL)
+        if accepted_match:
+            etc_content = accepted_match.group(2)
+            
+            # Cleaning up leading/trailing whitespace and newlines
+            etc_content = etc_content.strip()
+            
+            parsed_data["etc"] = etc_content
+    else:
+        # Extracting the content after the "passed" information
+        passed_match = re.search(r"passed \(N/A\)\n(.+)", message, re.DOTALL)
+        if passed_match:
+            etc_content = passed_match.group(1)
+            
+            # Cleaning up leading/trailing whitespace and newlines
+            etc_content = etc_content.strip()
+            
+            parsed_data["etc"] = etc_content
+    
+    return parsed_data
 
 def run_tests(results_name, entry):
     results = entry.get(results_name, [])
@@ -31,11 +74,16 @@ def run_tests(results_name, entry):
                 else:
                     break
 
-            try_results.append({"try": idx, "test": test_result})
+            # Parse the test_result using parse_message function
+            parsed_result = parse_message(test_result)
+            parsed_result["try"] = idx  # Add "try" value to the parsed_result
+            
+            try_results.append(parsed_result)
 
     return try_results
 
-with open("1-25 python-results.json", encoding="utf-8-sig") as file:
+
+with open("41-50.json", encoding="utf-8-sig") as file:
     json_data = json.load(file)
 
 all_results = []
@@ -56,7 +104,7 @@ for entry in json_data:
     }
     all_results.append(result_obj)
 
-with open("1-25 submit_result.json", "w", encoding="utf-8") as result_file:
+with open("41-50 submit-result.json", "w", encoding="utf-8") as result_file:
     json.dump(all_results, result_file, indent=2)
 
-print("All test results have been saved in compile_result.json.")
+print("All test results have been saved in submit_result.json.")
