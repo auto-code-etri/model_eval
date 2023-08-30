@@ -146,7 +146,7 @@ import json
 import time
 
 # OpenAI API 키 설정
-openai.api_key = "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"
+openai.api_key = "1234"
 
 # 결과를 저장할 리스트 초기화
 results = []
