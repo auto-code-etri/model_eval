@@ -56,7 +56,7 @@ import openai
 import json
 import time
 
-openai.api_key = "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"
+openai.api_key = "1234"
 
 results = []
 
